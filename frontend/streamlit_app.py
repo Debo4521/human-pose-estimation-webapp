@@ -1,6 +1,8 @@
 import streamlit as st
 import requests
 
+API_URL = "http://localhost:8000"
+
 st.title("Real-Time Human Pose Estimation")
 
 uploaded_file = st.file_uploader(
@@ -22,7 +24,7 @@ if uploaded_file is not None:
     }
 
     response = requests.post(
-        "http://127.0.0.1:8000/predict/image",
+        f"{API_URL}/predict/image",
         files=files
     )
 
@@ -37,12 +39,9 @@ if uploaded_file is not None:
 
     st.subheader("Pose Estimation Output")
 
-    image_response = requests.get(
-        "http://127.0.0.1:8000/output/latest"
-    )
+    image_response = requests.get(f"{API_URL}/output/latest")
 
     if image_response.status_code == 200:
-
         st.image(
             image_response.content,
             use_container_width=True
@@ -54,6 +53,5 @@ if uploaded_file is not None:
             file_name="pose_output.jpg",
             mime="image/jpeg"
         )
-
     else:
         st.warning("Could not load processed image.")
